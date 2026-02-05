@@ -22,6 +22,8 @@ applyTo: **/*.*
 
 - Use MCP servers for development and testing whenever possible to ensure consistency across different environments.
 
+- Use proper file and folder structure: Organize your codebase logically to facilitate navigation and collaboration among team members.
+
 ---
 
 # *description*: This file outlines the frontend development best practices for the project.
@@ -60,6 +62,7 @@ applyTo: **/frontend/**
 
 - Use react hooks, context, suspense, layouts, and server components where appropriate to build efficient and scalable applications.
 
+- Refer ./idea folder for the fonted development ideas and inspirations.
 
 ---
 
