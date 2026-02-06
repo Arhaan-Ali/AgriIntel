@@ -38,16 +38,16 @@ export const HeroCard = ({
     {/* Content */}
     <div className="relative z-10 flex flex-col h-full justify-between gap-4">
       <div className="p-3 rounded-lg inline-block w-fit bg-white/10 dark:bg-black/10 group-hover:bg-white/20 dark:group-hover:bg-black/20 transition-all duration-300 backdrop-blur-sm">
-        <div className="text-foreground group-hover:scale-110 transition-transform duration-300 group-hover:text-primary">
+        <div className="text-neutral-900 dark:text-neutral-100 group-hover:scale-110 transition-transform duration-300 group-hover:text-primary">
           {icon}
         </div>
       </div>
 
       <div>
-        <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
+        <h3 className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-100 mb-2 group-hover:text-primary transition-colors duration-300">
           {title}
         </h3>
-        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+        <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed">
           {description}
         </p>
       </div>
@@ -61,10 +61,10 @@ export const HeroCard = ({
 const HeroPage = () => {
   return (
     <PageLayout className="lg:py-0 px-0 relative overflow-hidden py-0">
-      <BackgroundRippleEffect />
       <section className='w-full sm:h-max relative flex flex-col py-24 sm:py-16 lg:py-38 text-center border-b border-border px-4 sm:px-12 bg-cover bg-center bg-[url("/hero.png")] mask-b-from-80 mask-b-to-transparent'>
+      <BackgroundRippleEffect />
         <div
-          className="absolute inset-0 backdrop-brightness-70"
+          className="absolute inset-0 bg-background/10 backdrop-brightness-80"
           aria-hidden="true"
         />
         <div className="space-y-6 sm:space-y-8 relative z-100">
@@ -73,7 +73,7 @@ const HeroPage = () => {
             <h1 className="text-5xl leading-14 sm:text-5xl lg:text-7xl font-extrabold sm:leading-22 tracking-tight text-neutral-100 mb-4 sm:mb-6 capitalize text-shadow sm:text-shadow-lg lg:text-shadow-xl dark:text-white z-10">
               Soil intelligence for modern farmers
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-n  eutral-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg lg:text-xl text-neutral-100 max-w-3xl mx-auto leading-relaxed">
               Unlock the potential of your farmland with AI-powered soil
               analysis, crop recommendations, and sustainable farming practices.
               Make data-driven decisions that transform your yields.
@@ -82,12 +82,12 @@ const HeroPage = () => {
 
           {/* CTA Buttons */}
           <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4 px-4">
-            <Button className="px-8 py-6 text-base font-semibold">
+            <Button className="px-8 py-6 text-base font-semibold dark:border-neutral-200 dark:text-neutral-100">
               Get Started Free
             </Button>
             <Button
               variant="outline"
-              className="px-8 py-6 text-base font-semibold"
+              className="px-8 py-6 text-base font-semibold dark:border-neutral-200 dark:text-white"
             >
               Watch Demo
             </Button>

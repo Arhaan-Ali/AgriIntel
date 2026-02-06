@@ -46,9 +46,9 @@ const FeatureCard = ({
         backgroundImage:
           "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
         WebkitMaskImage:
-          "radial-gradient(ellipse 80% 80% at 100% 0%, #000 50%, transparent 90%)",
+          "radial-gradient(ellipse 80% 80% at 100% 0%, #000 50%, transparent 100%)",
         maskImage:
-          "radial-gradient(ellipse 80% 80% at 100% 0%, #000 50%, transparent 90%)",
+          "radial-gradient(ellipse 80% 80% at 100% 0%, #000 50%, transparent 100%)",
       }}
     />
     {/* Background accent */}
@@ -71,7 +71,7 @@ const FeatureCard = ({
           "
         >
           <div
-            className={`text-foreground group-hover:scale-175 group-hover:animate-bounce transition-transform duration-300 mx-auto w-full group-hover:text-primary scale-150 ${layout === "wide" ? "hidden" : ""}`}
+            className={`text-neutral-400 group-hover:scale-175 group-hover:animate-bounce transition-transform duration-300 mx-auto w-full group-hover:text-primary scale-150 ${layout === "wide" ? "hidden" : ""}`}
           >
             {icon}
           </div>
@@ -80,12 +80,12 @@ const FeatureCard = ({
 
       <div className="">
         <h3
-          className={`${layout === "wide" ? "text-3xl sm:text-6xl sm:mb-8" : "text-xl"} font-bold text-neutral-500 mb-2 group-hover:translate-x-1 transition-transform duration-300 group-hover:text-primary`}
+          className={`${layout === "wide" ? "text-3xl sm:text-6xl sm:mb-8" : "text-xl"} font-bold text-neutral-500 dark:text-neutral-50 mb-2 group-hover:translate-x-1 transition-transform duration-300 group-hover:text-primary`}
         >
           {title}
         </h3>
         <p
-          className={`${layout === "wide" ? "text-base sm:text-lg" : "text-base"} text-muted-foreground/90 leading-relaxed`}
+          className={`${layout === "wide" ? "text-base sm:text-lg" : "text-base"} text-neutral-400 dark:text-neutral-300 leading-relaxed`}
         >
           {description}
         </p>
@@ -132,7 +132,7 @@ const FeaturePage = () => {
     <PageLayout className="border-y border-border">
       <PageHeader
         title="Transform Your Farming with Smart Soil Intelligence"
-        className="mb-8 lg:mb-12 text-center lg:text-7xl"
+        className="mb-8 lg:mb-12 text-center lg:text-7xl dark:text-neutral-50 text-neutral-500"
       />
       <PageSection>
         <PageContent>

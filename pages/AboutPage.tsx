@@ -93,10 +93,10 @@ const AboutCard = ({
           {icon}
         </div>
       </div>
-      <h3 className="text-xl sm:text-2xl font-bold text-foreground/80 mb-2 group-hover:translate-x-1 transition-transform duration-300 group-hover:text-primary">
+      <h3 className="text-xl sm:text-2xl font-bold text-neutral-500 dark:text-neutral-50 mb-2 group-hover:translate-x-1 transition-transform duration-300 group-hover:text-primary">
         {title}
       </h3>
-      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+      <p className="text-sm sm:text-base text-neutral-400 dark:text-neutral-300 leading-relaxed">
         {description}
       </p>
     </div>
@@ -165,12 +165,12 @@ const AboutPage = () => {
     <PageLayout className="min-h-dvh">
       <PageSection className="">
         <PageContent>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight translate-z-90 text-shadow sm:text-shadow-sm">
-            Built to help farmers <span className='text-primary/60'>grow smarter</span>, faster, and sustainably.
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-neutral-500 dark:text-neutral-50 tracking-tight translate-z-90 text-shadow sm:text-shadow-sm">
+            Built to help farmers <span className='text-primary/60 dark:text-primary'>grow smarter</span>, faster, and sustainably.
           </h1>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div className="space-y-6">
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+              <p className="text-base sm:text-lg text-neutral-400 dark:text-neutral-300 leading-relaxed">
                 We blend agronomy expertise with modern AI to deliver clear, actionable
                 insights on soil health, crop selection, and fertilizer planning.
               </p>
@@ -181,7 +181,7 @@ const AboutPage = () => {
                       src="/about-01.png"
                       alt="Soil analysis in the field"
                       fill
-                      className="object-cover"
+                      className="object-cover brightness-75 hover:brightness-100 transition-all duration-300"
                       sizes="(min-width: 640px) 50vw, 100vw"
                       priority
                     />
@@ -193,7 +193,7 @@ const AboutPage = () => {
                       src="/about-02.png"
                       alt="Smart farming dashboard view"
                       fill
-                      className="object-cover"
+                      className="object-cover brightness-75 hover:brightness-100 transition-all duration-300"
                       sizes="(min-width: 640px) 50vw, 100vw"
                     />
                   </div>
@@ -219,10 +219,10 @@ const AboutPage = () => {
       <PageSection className="mt-12 sm:mt-16 lg:mt-20">
         <PageContent>
           <div className="mb-8 sm:mb-12 text-center">
-            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-foreground mb-4 text-shadow sm:text-shadow-sm">
-              <span className='text-primary/60'>Why</span> Farmers Choose Us
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-neutral-500 dark:text-neutral-50 mb-4 text-shadow sm:text-shadow-sm">
+              <span className='text-primary/60 dark:text-primary'>Why</span> Farmers Choose Us
             </h2>
-            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
+            <p className="text-neutral-400 dark:text-neutral-300 text-base sm:text-lg max-w-2xl mx-auto">
               Everything you need to optimize your farm in one intelligent platform.
             </p>
           </div>

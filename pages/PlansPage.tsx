@@ -54,20 +54,20 @@ const PlanCard = ({
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-5xl sm:text-6xl text-center font-bold text-foreground w-full">{name}</h3>
+          <h3 className="text-5xl sm:text-6xl text-center font-bold text-primary/80 dark:text-neutral-50 w-full">{name}</h3>
         </div>
-        <p className="text-sm sm:text-base text-muted-foreground mb-4">{description}</p>
+        <p className="text-sm sm:text-base text-neutral-400 dark:text-neutral-300 mb-4">{description}</p>
 
         {/* Price */}
         <div className="flex items-baseline gap-1 w-full justify-center">
-          <span className="text-4xl sm:text-5xl font-bold text-foreground">{price}</span>
-          {typeof price === 'number' && <span className="text-muted-foreground ">/month</span>}
+          <span className="text-4xl sm:text-5xl font-bold text-neutral-500 dark:text-neutral-50">{price}</span>
+          {typeof price === 'number' && <span className="text-neutral-400 dark:text-neutral-300 ">/month</span>}
         </div>
       </div>
 
       {/* Features List */}
       <div className="space-y-3 flex-1 mb-0 border border-border/50 p-6 sm:pt-8 rounded-xl bg-linear-to-br from-muted/5 to-muted/10">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-300 uppercase tracking-wider">
           What&apos;s included
         </p>
         <ul className="space-y-3">
@@ -79,7 +79,7 @@ const PlanCard = ({
                 <div className="w-5 h-5 rounded-full border border-border/50 shrink-0 mt-0.5" />
               )}
               <span
-                className={`text-sm sm:text-base ${feature.included ? 'text-foreground' : 'text-muted-foreground line-through'
+                className={`text-sm sm:text-base ${feature.included ? 'text-neutral-400 dark:text-neutral-300' : 'text-neutral-400 dark:text-neutral-300 line-through'
                   }`}
               >
                 {feature.name}
@@ -140,14 +140,14 @@ const PlansPage = () => {
   }
 
   return (
-    <PageLayout className="py-0 pt-8 lg:py-0 lg:pt-16 bg-background px-0">
+    <PageLayout className="py-0 pt-8 lg:py-0 lg:pt-16 bg-background px-0 text-neutral-500 dark:text-neutral-50">
       <section className="max-w-6xl mx-auto text-center space-y-8 sm:space-y-12 px-4">
         {/* Header */}
         <div className="space-y-4 sm:space-y-6">
-          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-foreground">
-            Choose Your <span className="text-primary/60">Plan</span>
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-neutral-500 dark:text-neutral-50">
+            Choose Your <span className="text-primary/60 dark:text-primary">Plan</span>
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
             Choose the plan that works best for you and your farming needs. Start free and upgrade anytime.
           </p>
         </div>
@@ -165,10 +165,10 @@ const PlansPage = () => {
         {/* FAQ or Additional Info */}
       </section>
       <div className="mt-12 sm:mt-16 p-6 sm:p-12 border-y border-primary/30 bg-linear-to-br from-primary/5 to-primary/10 text-center">
-        <h3 className="text-xl sm:text-4xl font-bold text-foreground mb-3">
+        <h3 className="text-xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
           Need more information?
         </h3>
-        <p className="text-muted-foreground text-sm sm:text-base mb-4">
+        <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base mb-4">
           Contact our team to discuss custom plans or enterprise solutions for large-scale farming operations.
         </p>
         <Button variant="outline">Contact Sales</Button>
