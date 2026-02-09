@@ -124,7 +124,7 @@ export default function DashboardTemplate({
             </div>
           </MobileSidebar>
           <main className="flex-1 overflow-y-auto bg-background/80">
-              <div className="flex-1 px-4 py-4">{children}</div>
+            <div className="flex-1 px-4 py-4">{children}</div>
           </main>
         </div>
       </div>

@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useClerk, useUser, UserAvatar } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import { History, LayoutDashboard, LogOut, Settings, User } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useClerk, useUser, UserAvatar } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { History, LayoutDashboard, LogOut, Settings, User } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,54 +11,54 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
 
 type CustomAvatarProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function CustomAvatar({ className }: CustomAvatarProps) {
-  const { user } = useUser()
-  const clerk = useClerk()
-  const router = useRouter()
-  const email = user?.primaryEmailAddress?.emailAddress
-  const displayName = user?.fullName ?? 'Account'
+  const { user } = useUser();
+  const clerk = useClerk();
+  const router = useRouter();
+  const email = user?.primaryEmailAddress?.emailAddress;
+  const displayName = user?.fullName ?? "Account";
 
   const menuItems = [
     {
-      key: 'dashboard',
-      label: 'Dashboard',
+      key: "dashboard",
+      label: "Dashboard",
       icon: LayoutDashboard,
-      onClick: () => router.push('/dashboard'),
+      onClick: () => router.push("/dashboard"),
     },
     {
-      key: 'history',
-      label: 'History',
+      key: "history",
+      label: "History",
       icon: History,
-      onClick: () => router.push('/dashboard/history'),
+      onClick: () => router.push("/dashboard/history"),
     },
     {
-      key: 'settings',
-      label: 'Settings',
+      key: "settings",
+      label: "Settings",
       icon: Settings,
-      onClick: () => router.push('/dashboard/settings'),
+      onClick: () => router.push("/dashboard/settings"),
     },
     {
-      key: 'manage-account',
-      label: 'Manage account',
+      key: "manage-account",
+      label: "Manage account",
       icon: User,
       onClick: () => clerk.openUserProfile(),
     },
-  ]
+  ];
 
   const dangerItems = [
     {
-      key: 'sign-out',
-      label: 'Sign out',
+      key: "sign-out",
+      label: "Sign out",
       icon: LogOut,
       onClick: () => clerk.signOut(),
     },
-  ]
+  ];
 
   return (
     <DropdownMenu>
@@ -66,8 +66,8 @@ export default function CustomAvatar({ className }: CustomAvatarProps) {
         <button
           type="button"
           className={cn(
-            'relative inline-flex items-center justify-center rounded-full outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2',
-            className
+            "relative inline-flex items-center justify-center rounded-full outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2",
+            className,
           )}
           aria-label="Open user menu"
         >
@@ -75,10 +75,10 @@ export default function CustomAvatar({ className }: CustomAvatarProps) {
             appearance={{
               elements: {
                 avatarBox:
-                  'h-9 w-9 rounded-full ring-2 ring-primary/30 ring-offset-2 ring-offset-background',
-                avatarImage: 'rounded-full',
+                  "h-9 w-9 rounded-full ring-2 ring-primary/30 ring-offset-2 ring-offset-background",
+                avatarImage: "rounded-full",
                 avatarFallback:
-                  'rounded-full bg-muted text-foreground text-xs font-semibold',
+                  "rounded-full bg-muted text-foreground text-xs font-semibold",
               },
             }}
           />
@@ -119,5 +119,5 @@ export default function CustomAvatar({ className }: CustomAvatarProps) {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
