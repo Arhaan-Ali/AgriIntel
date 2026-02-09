@@ -2,10 +2,10 @@ import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/theme-toggle";
 import { Leaf } from "lucide-react";
 import Link from "next/link";
+import CustomAvatar from "@/components/custom-avatar";
 import {
   SignedIn,
   SignedOut,
-  UserButton,
 } from "@clerk/nextjs";
 
 const HeaderLayout = () => {
@@ -32,7 +32,7 @@ const HeaderLayout = () => {
             </Link>
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <CustomAvatar />
           </SignedIn>
 
         </div>
