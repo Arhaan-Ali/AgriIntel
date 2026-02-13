@@ -15,14 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <html lang="en">
         <body className="antialiased w-full min-h-dvh bg-background text-neutral-900">
           <RootProvider>
             {children}
           </RootProvider>
         </body>
       </html>
-    </ClerkProvider>
   );
 }
