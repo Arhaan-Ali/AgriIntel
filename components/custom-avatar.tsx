@@ -13,9 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type CustomAvatarProps = {
-  className?: string;
-};
+import type { CustomAvatarProps } from "@/types/custom-avatar.interface";
 
 export default function CustomAvatar({ className }: CustomAvatarProps) {
   const { user } = useUser();

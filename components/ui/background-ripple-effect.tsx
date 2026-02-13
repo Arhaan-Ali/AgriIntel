@@ -1,16 +1,7 @@
 "use client";
 import React, { useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-
-export const BackgroundRippleEffect = ({
-  rows = 8,
-  cols = 27,
-  cellSize = 56,
-}: {
-  rows?: number;
-  cols?: number;
-  cellSize?: number;
-}) => {
+import type { DivGridProps, CellStyle } from "@/types/background-ripple-effect.interface";
   const [clickedCell, setClickedCell] = useState<{
     row: number;
     col: number;

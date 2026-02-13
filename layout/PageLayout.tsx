@@ -3,6 +3,14 @@
 import React, { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
+import type {
+  PageLayoutProps,
+  PageSectionProps,
+  PageHeaderProps,
+  PageSidebarProps,
+  PageGridProps
+} from '@/types/layout/page-layout.interface';
+
 /**
  * PageLayout - Reusable page container with semantic structure
  * 
@@ -15,86 +23,6 @@ import { cn } from '@/lib/utils'
  * mobile-first responsive design and dark mode support.
  */
 
-interface PageLayoutProps {
-  children?: ReactNode
-  className?: string
-  variant?: 'default' | 'compact' | 'wide'
-  hasSidebar?: boolean
-}
-
-interface PageSectionProps {
-  children: ReactNode
-  className?: string
-  id?: string
-}
-
-interface PageHeaderProps {
-  title: string
-  description?: string
-  className?: string
-}
-
-interface PageSidebarProps {
-  children: ReactNode
-  position?: 'left' | 'right'
-  className?: string
-}
-
-/**
- * Main PageLayout Component
- * Provides semantic structure with consistent spacing and responsive behavior
- */
-const PageLayout = ({
-  children,
-  className = '',
-  variant = 'default',
-  hasSidebar = false,
-}: PageLayoutProps) => {
-  const variants = {
-    default: 'max-w-6xl',
-    compact: 'max-w-3xl',
-    wide: 'max-w-7xl',
-  }
-
-  const gridClass = hasSidebar
-    ? 'grid grid-cols-1 gap-6 lg:grid-cols-4'
-    : ''
-  return (
-    <main
-      className={cn(`
-        w-full
-        mx-auto px-4
-        py-8 sm:py-12 lg:py-16
-        ${variants[variant]}
-        ${gridClass}
-      `, className)}
-    >
-      {children}
-    </main>
-  )
-}
-
-/**
- * PageSection - Semantic section wrapper for content organization
- * Use to group related content with consistent spacing
- */
-const PageSection = ({
-  children,
-  className = '',
-  id,
-}: PageSectionProps) => {
-  return (
-    <section
-      id={id}
-      className={`
-        space-y-6
-        ${className}
-      `}
-    >
-      {children}
-    </section>
-  )
-}
 
 /**
  * PageHeader - Standard header section with title and optional description
@@ -178,13 +106,6 @@ const PageContent = ({ children, className = '' }: PageSectionProps) => {
 
 /**
  * PageGrid - Grid layout for cards, items, or other repeating content
- * Responsive columns based on breakpoints
- */
-interface PageGridProps {
-  children: ReactNode
-  columns?: 1 | 2 | 3 | 4
-  className?: string
-}
 
 const PageGrid = ({ children, columns = 3, className = '' }: PageGridProps) => {
   const columnMap = {
@@ -216,4 +137,4 @@ export {
   PageContent,
   PageGrid,
 }
-export type { PageLayoutProps, PageSectionProps, PageHeaderProps, PageSidebarProps, PageGridProps }
+**/

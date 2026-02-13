@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React from 'react'
+import React from "react";
 import {
   Card,
   CardContent,
@@ -9,11 +9,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import type { ChartConfig } from "@/types/chart/chart.interface";
 import { Bar, XAxis, BarChart } from "recharts";
 
 export const description = "A stacked bar chart with a legend";
@@ -36,70 +36,69 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-
 const SoilValuesChartCad = (): React.ReactElement => {
-    return (
-      <div className="col-span-1 flex flex-col h-full w-full">
-        <Card>
-          <CardHeader>
-            <CardTitle>Sensor Readings</CardTitle>
-            <CardDescription>
-              Latest soil sensor values and trends.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="h-full w-full">
-            <ChartContainer config={chartConfig}>
-              <BarChart accessibilityLayer data={chartData}>
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      weekday: "short",
-                    });
-                  }}
-                />
-                <Bar
-                  dataKey="running"
-                  stackId="a"
-                  fill="var(--color-running)"
-                  radius={[0, 0, 4, 4]}
-                />
-                <Bar
-                  dataKey="swimming"
-                  stackId="a"
-                  fill="var(--color-swimming)"
-                  radius={[4, 4, 0, 0]}
-                />
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      hideLabel
-                      formatter={(value, name) => (
-                        <div className="text-muted-foreground flex min-w-32.5 items-center text-xs">
-                          {chartConfig[name as keyof typeof chartConfig]
-                            ?.label || name}
-                          <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                            {value}
-                            <span className="text-muted-foreground font-normal">
-                              kcal
-                            </span>
-                          </div>
+  return (
+    <div className="col-span-1 flex flex-col h-full w-full">
+      <Card>
+        <CardHeader>
+          <CardTitle>Sensor Readings</CardTitle>
+          <CardDescription>
+            Latest soil sensor values and trends.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="h-full w-full">
+          <ChartContainer config={chartConfig}>
+            <BarChart accessibilityLayer data={chartData}>
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => {
+                  return new Date(value).toLocaleDateString("en-US", {
+                    weekday: "short",
+                  });
+                }}
+              />
+              <Bar
+                dataKey="running"
+                stackId="a"
+                fill="var(--color-running)"
+                radius={[0, 0, 4, 4]}
+              />
+              <Bar
+                dataKey="swimming"
+                stackId="a"
+                fill="var(--color-swimming)"
+                radius={[4, 4, 0, 0]}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    hideLabel
+                    formatter={(value, name) => (
+                      <div className="text-muted-foreground flex min-w-32.5 items-center text-xs">
+                        {chartConfig[name as keyof typeof chartConfig]?.label ||
+                          name}
+                        <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
+                          {value}
+                          <span className="text-muted-foreground font-normal">
+                            kcal
+                          </span>
                         </div>
-                      )}
-                    />
-                  }
-                  cursor={false}
-                  defaultIndex={1}
-                />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-      </div>
-    );
-}
+                      </div>
+                    )}
+                  />
+                }
+                cursor={false}
+                defaultIndex={1}
+              />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
-export default SoilValuesChartCad
+export default SoilValuesChartCad;

@@ -1,7 +1,9 @@
 "use client";
+
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { cn } from "@/lib/utils";
+import type { PieChartCardProps } from "@/types/dashboard/pie-chart-card.interface";
 
 // Example data: can be replaced via props
 const defaultData = [
@@ -20,19 +22,6 @@ const COLORS = [
   "color-mix(in oklab, var(--primary) 80%, black 20%)",
   "color-mix(in oklab, var(--primary) 60%, black 40%)",
 ];
-
-export interface PieChartCardProps {
-  title?: string;
-  subtitle?: string;
-  data?: { name: string; value: number }[];
-  showLabels?: boolean;
-  valueSuffix?: string;
-  trendText?: string;
-  trendValue?: string;
-  trendPositive?: boolean;
-  description?: string;
-  className?: string;
-}
 
 const PieChartCard: React.FC<PieChartCardProps> = ({
   title = "Pie Chart - Label List",

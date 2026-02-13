@@ -1,25 +1,11 @@
-'use client'
+"use client";
 
-import { PageLayout, PageSection, PageContent } from '@/layout/PageLayout'
-import React from 'react'
-import { Check, Lock } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { PageLayout, PageSection, PageContent } from "@/layout/PageLayout";
+import React from "react";
+import { Check, Lock } from "lucide-react";
 
-interface PlanFeature {
-  name: string
-  included: boolean
-}
-
-interface PlanProps {
-  name: string
-  price: string | number
-  description: string
-  features: PlanFeature[]
-  highlighted?: boolean
-  gradient: string
-  comingSoon?: boolean
-  cta: string
-}
+import { Button } from "@/components/ui/button";
+import type { PlanFeature, PlanProps } from "@/types/plans/plan.interface";
 
 const PlanCard = ({
   name,
@@ -54,14 +40,24 @@ const PlanCard = ({
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-5xl sm:text-6xl text-center font-bold text-primary/80 dark:text-neutral-50 w-full">{name}</h3>
+          <h3 className="text-5xl sm:text-6xl text-center font-bold text-primary/80 dark:text-neutral-50 w-full">
+            {name}
+          </h3>
         </div>
-        <p className="text-sm sm:text-base text-neutral-400 dark:text-neutral-300 mb-4">{description}</p>
+        <p className="text-sm sm:text-base text-neutral-400 dark:text-neutral-300 mb-4">
+          {description}
+        </p>
 
         {/* Price */}
         <div className="flex items-baseline gap-1 w-full justify-center">
-          <span className="text-4xl sm:text-5xl font-bold text-neutral-500 dark:text-neutral-50">{price}</span>
-          {typeof price === 'number' && <span className="text-neutral-400 dark:text-neutral-300 ">/month</span>}
+          <span className="text-4xl sm:text-5xl font-bold text-neutral-500 dark:text-neutral-50">
+            {price}
+          </span>
+          {typeof price === "number" && (
+            <span className="text-neutral-400 dark:text-neutral-300 ">
+              /month
+            </span>
+          )}
         </div>
       </div>
 
@@ -79,8 +75,11 @@ const PlanCard = ({
                 <div className="w-5 h-5 rounded-full border border-border/50 shrink-0 mt-0.5" />
               )}
               <span
-                className={`text-sm sm:text-base ${feature.included ? 'text-neutral-400 dark:text-neutral-300' : 'text-neutral-400 dark:text-neutral-300 line-through'
-                  }`}
+                className={`text-sm sm:text-base ${
+                  feature.included
+                    ? "text-neutral-400 dark:text-neutral-300"
+                    : "text-neutral-400 dark:text-neutral-300 line-through"
+                }`}
               >
                 {feature.name}
               </span>
@@ -90,10 +89,10 @@ const PlanCard = ({
         <div className="mb-4 sm:mb-6 mt-6">
           <Button
             className="w-full"
-            variant={highlighted ? 'outline' : 'default'}
+            variant={highlighted ? "outline" : "default"}
             disabled={comingSoon}
           >
-            {comingSoon ? 'Coming Soon' : cta}
+            {comingSoon ? "Coming Soon" : cta}
           </Button>
         </div>
       </div>
@@ -102,42 +101,42 @@ const PlanCard = ({
       <div className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-primary/0 via-primary/50 to-primary/0 group-hover:via-primary transition-all duration-300" />
     </div>
   </div>
-)
+);
 
 const PlansPage = () => {
   const freePlan: PlanProps = {
-    name: 'Free',
+    name: "Free",
     price: 0,
-    description: 'Perfect for getting started with soil analysis',
-    cta: 'Get Started',
-    gradient: 'from-blue-400/10 to-cyan-500/10',
+    description: "Perfect for getting started with soil analysis",
+    cta: "Get Started",
+    gradient: "from-blue-400/10 to-cyan-500/10",
     features: [
-      { name: 'Basic Soil Health Report', included: true },
-      { name: 'Monthly Analysis', included: true },
-      { name: 'Email Support', included: true },
-      { name: 'Advanced Analytics', included: false },
-      { name: 'Priority Support', included: false },
-      { name: 'Custom Recommendations', included: false },
+      { name: "Basic Soil Health Report", included: true },
+      { name: "Monthly Analysis", included: true },
+      { name: "Email Support", included: true },
+      { name: "Advanced Analytics", included: false },
+      { name: "Priority Support", included: false },
+      { name: "Custom Recommendations", included: false },
     ],
-  }
+  };
 
   const proPlan: PlanProps = {
-    name: 'Pro',
-    price: 'Coming Soon',
-    description: 'Advanced features for serious farmers',
-    cta: 'Get Pro',
+    name: "Pro",
+    price: "Coming Soon",
+    description: "Advanced features for serious farmers",
+    cta: "Get Pro",
     highlighted: true,
-    gradient: 'from-purple-400/15 to-pink-500/15',
+    gradient: "from-purple-400/15 to-pink-500/15",
     comingSoon: true,
     features: [
-      { name: 'Comprehensive Soil Analysis', included: true },
-      { name: 'Weekly Detailed Reports', included: true },
-      { name: 'Priority Support', included: true },
-      { name: 'Advanced Analytics Dashboard', included: true },
-      { name: 'AI Crop Recommendations', included: true },
-      { name: 'Custom Fertilizer Plans', included: true },
+      { name: "Comprehensive Soil Analysis", included: true },
+      { name: "Weekly Detailed Reports", included: true },
+      { name: "Priority Support", included: true },
+      { name: "Advanced Analytics Dashboard", included: true },
+      { name: "AI Crop Recommendations", included: true },
+      { name: "Custom Fertilizer Plans", included: true },
     ],
-  }
+  };
 
   return (
     <PageLayout className="py-0 pt-8 lg:py-0 lg:pt-16 bg-background px-0 text-neutral-500 dark:text-neutral-50">
@@ -145,10 +144,12 @@ const PlansPage = () => {
         {/* Header */}
         <div className="space-y-4 sm:space-y-6">
           <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-neutral-500 dark:text-neutral-50">
-            Choose Your <span className="text-primary/60 dark:text-primary">Plan</span>
+            Choose Your{" "}
+            <span className="text-primary/60 dark:text-primary">Plan</span>
           </h2>
           <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-            Choose the plan that works best for you and your farming needs. Start free and upgrade anytime.
+            Choose the plan that works best for you and your farming needs.
+            Start free and upgrade anytime.
           </p>
         </div>
 
@@ -169,12 +170,13 @@ const PlansPage = () => {
           Need more information?
         </h3>
         <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base mb-4">
-          Contact our team to discuss custom plans or enterprise solutions for large-scale farming operations.
+          Contact our team to discuss custom plans or enterprise solutions for
+          large-scale farming operations.
         </p>
         <Button variant="outline">Contact Sales</Button>
       </div>
     </PageLayout>
-  )
-}
+  );
+};
 
-export default PlansPage
+export default PlansPage;

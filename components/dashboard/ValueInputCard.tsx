@@ -1,21 +1,11 @@
 "use client";
+
 import React from "react";
 import { useForm } from "react-hook-form";
-
-type FieldType = {
-  name: string;
-  label: string;
-  type: string;
-  options?: string[];
-};
-
-type ValueInputCardProps = {
-  fields?: FieldType[];
-  initialValues?: Record<string, string | number>;
-  onChange?: (values: Record<string, string | number>) => void;
-  title?: string;
-  className?: string;
-};
+import type {
+  FieldType,
+  ValueInputCardProps,
+} from "@/types/dashboard/value-input-card.interface";
 
 const defaultFields: FieldType[] = [
   { name: "nitrogen", label: "Nitrogen (%)", type: "number" },
@@ -25,7 +15,6 @@ const defaultFields: FieldType[] = [
   { name: "soilType", label: "Soil Type", type: "text" },
   { name: "faramSize", label: "Farm Size (acres)", type: "number" },
   { name: "location", label: "Location", type: "text" },
-  
 ];
 
 const ValueInputCard: React.FC<ValueInputCardProps> = ({
@@ -122,7 +111,7 @@ const ValueInputCard: React.FC<ValueInputCardProps> = ({
           );
         })}
 
-          <button
+        <button
           type="submit"
           className="rounded-lg bg-primary text-white py-2 px-4 font-semibold shadow-sm hover:bg-primary/80 transition"
         >

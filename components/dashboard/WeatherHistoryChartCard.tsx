@@ -1,16 +1,13 @@
 "use client";
 import * as React from "react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
 } from "@/components/ui/chart";
+import type { ChartConfig } from "@/types/chart/chart.interface";
 export const description = "An interactive line chart";
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
@@ -120,8 +117,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const WeatherHistoryChartCard = () => {
-  const [activeChart] =
-    React.useState<keyof typeof chartConfig>("desktop");
+  const [activeChart] = React.useState<keyof typeof chartConfig>("desktop");
   return (
     <div className="lg:col-span-2 flex flex-col h-full">
       <Card className="py-4 sm:py-0">

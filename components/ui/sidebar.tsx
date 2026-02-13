@@ -2,24 +2,23 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useRef, useState, createContext, useContext } from "react";
+
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  createContext,
+  useContext,
+} from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { IconMenu2, IconX } from "@tabler/icons-react";
-
-interface Links {
-  label: string;
-  href: string;
-  icon: React.JSX.Element | React.ReactNode;
-}
-
-interface SidebarContextProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  animate: boolean;
-}
+import type {
+  Links,
+  SidebarContextProps,
+} from "@/types/sidebar/sidebar.interface";
 
 const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 export const useSidebar = () => {
@@ -94,7 +93,7 @@ export const DesktopSidebar = ({
         ref={sidebarRef}
         className={cn(
           "h-dvh px-4 py-4 hidden  md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800  shrink-0",
-          className
+          className,
         )}
         animate={{
           width: animate ? (open ? "200px" : "60px") : "300px",
@@ -161,7 +160,7 @@ export const MobileSidebar = ({
         <div
           className={cn(
             "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full",
-            topBarClassName
+            topBarClassName,
           )}
           {...props}
         >
@@ -185,7 +184,7 @@ export const MobileSidebar = ({
             }}
             className={cn(
               "fixed h-full w-full inset-0 bg-white dark:bg-neutral-900 p-10 z-100 flex flex-col justify-between",
-              className
+              className,
             )}
           >
             <div
@@ -218,17 +217,15 @@ export const SidebarLink = ({
       href={link.href}
       className={cn(
         "flex items-center justify-start gap-2 group/sidebar rounded-lg px-2 py-2 transition",
-        isActive
-          ? "bg-primary/10 text-foreground"
-          : "hover:bg-muted/60",
-        className
+        isActive ? "bg-primary/10 text-foreground" : "hover:bg-muted/60",
+        className,
       )}
       {...props}
     >
       <span
         className={cn(
           "flex h-6 w-6 items-center justify-center rounded-md",
-          isActive ? "text-primary" : "text-muted-foreground"
+          isActive ? "text-primary" : "text-muted-foreground",
         )}
       >
         {link.icon}
@@ -241,7 +238,9 @@ export const SidebarLink = ({
         }}
         className={cn(
           "text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block p-0 m-0",
-          isActive ? "text-foreground" : "text-neutral-700 dark:text-neutral-200"
+          isActive
+            ? "text-foreground"
+            : "text-neutral-700 dark:text-neutral-200",
         )}
       >
         {link.label}
