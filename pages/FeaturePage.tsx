@@ -6,17 +6,11 @@ import {
   PageContent,
   PageHeader,
 } from "@/layout/PageLayout";
+
 import React from "react";
 import { Sprout, Droplets, BookOpen, ChartBar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface FeatureCardProps {
-  title?: string;
-  description?: string;
-  icon?: React.ReactNode;
-  gradient?: string;
-  layout?: "tall" | "wide" | "default";
-}
+import type { FeatureCardProps } from "@/types/feature/feature-card.interface";
 
 const FeatureCard = ({
   title,

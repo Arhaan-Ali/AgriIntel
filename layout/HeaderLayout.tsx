@@ -14,10 +14,15 @@ const HeaderLayout = () => {
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between py-4 px-4 sm:px-0">
         <Link
           href="/"
-          className="font-bold text-2xl text-foreground hover:text-primary transition-colors"
+          className="font-bold text-2xl hover:text-primary transition-colors uppercase text-neutral-500"
+          aria-label="Krishi Sahayak home"
         >
-          <Leaf size={28} className="inline-block mr-4 text-primary" />
-          LOGO
+          <Leaf
+            size={28}
+            className="inline-block mr-1 text-primary"
+            aria-hidden="true"
+          />
+          krishi <span className="text-primary">sahayak</span>
         </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />

@@ -1,8 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import RootProvider from "@/provider/RootProvider";
-
+import { ThemeProvider } from "@/provider/theme-provider";
 
 export const metadata: Metadata = {
   title: "App",
@@ -15,14 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="antialiased w-full min-h-dvh bg-background text-neutral-900">
-          <RootProvider>
-            {children}
-          </RootProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className="antialiased w-full min-h-dvh bg-background text-neutral-900">
+        <RootProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </RootProvider>
+      </body>
+    </html>
   );
 }

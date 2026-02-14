@@ -1,88 +1,50 @@
-'use client'
+"use client";
 
-import React, { ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import React, { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import {
+  PageHeaderProps,
+  PageLayoutProps,
+  PageSectionProps,
+  PageSidebarProps,
+} from "@/types/layout/page-layout.interface";
 
-/**
- * PageLayout - Reusable page container with semantic structure
- * 
- * Supports multiple layout patterns:
- * - Simple content wrapping
- * - Sidebar layouts (left/right)
- * - Section-based content organization
- * 
- * All styling follows Tailwind v4 utility-first approach with
- * mobile-first responsive design and dark mode support.
- */
-
-interface PageLayoutProps {
-  children?: ReactNode
-  className?: string
-  variant?: 'default' | 'compact' | 'wide'
-  hasSidebar?: boolean
-}
-
-interface PageSectionProps {
-  children: ReactNode
-  className?: string
-  id?: string
-}
-
-interface PageHeaderProps {
-  title: string
-  description?: string
-  className?: string
-}
-
-interface PageSidebarProps {
-  children: ReactNode
-  position?: 'left' | 'right'
-  className?: string
-}
-
-/**
- * Main PageLayout Component
- * Provides semantic structure with consistent spacing and responsive behavior
- */
 const PageLayout = ({
   children,
-  className = '',
-  variant = 'default',
+  className = "",
+  variant = "default",
   hasSidebar = false,
 }: PageLayoutProps) => {
   const variants = {
-    default: 'max-w-6xl',
-    compact: 'max-w-3xl',
-    wide: 'max-w-7xl',
-  }
+    default: "max-w-6xl",
+    compact: "max-w-3xl",
+    wide: "max-w-7xl",
+  };
 
-  const gridClass = hasSidebar
-    ? 'grid grid-cols-1 gap-6 lg:grid-cols-4'
-    : ''
+  const gridClass = hasSidebar ? "grid grid-cols-1 gap-6 lg:grid-cols-4" : "";
   return (
     <main
-      className={cn(`
+      className={cn(
+        `
         w-full
         mx-auto px-4
         py-8 sm:py-12 lg:py-16
         ${variants[variant]}
         ${gridClass}
-      `, className)}
+      `,
+        className,
+      )}
     >
       {children}
     </main>
-  )
-}
+  );
+};
 
 /**
  * PageSection - Semantic section wrapper for content organization
  * Use to group related content with consistent spacing
  */
-const PageSection = ({
-  children,
-  className = '',
-  id,
-}: PageSectionProps) => {
+const PageSection = ({ children, className = "", id }: PageSectionProps) => {
   return (
     <section
       id={id}
@@ -93,8 +55,8 @@ const PageSection = ({
     >
       {children}
     </section>
-  )
-}
+  );
+};
 
 /**
  * PageHeader - Standard header section with title and optional description
@@ -103,17 +65,20 @@ const PageSection = ({
 const PageHeader = ({
   title,
   description,
-  className = '',
+  className = "",
 }: PageHeaderProps) => {
   return (
     <header className={`space-y-2 ${className}`}>
       <h1
-        className={cn(`
+        className={cn(
+          `
           text-3xl sm:text-4xl lg:text-5xl
           font-bold
           text-neutral-400
           tracking-tight
-        `, className)}
+        `,
+          className,
+        )}
       >
         {title}
       </h1>
@@ -129,8 +94,8 @@ const PageHeader = ({
         </p>
       )}
     </header>
-  )
-}
+  );
+};
 
 /**
  * PageSidebar - Sidebar component for navigation, filters, or secondary content
@@ -138,10 +103,11 @@ const PageHeader = ({
  */
 const PageSidebar = ({
   children,
-  position = 'right',
-  className = '',
+  position = "right",
+  className = "",
 }: PageSidebarProps) => {
-  const positionClass = position === 'left' ? 'lg:col-span-1 lg:order-first' : 'lg:col-span-1'
+  const positionClass =
+    position === "left" ? "lg:col-span-1 lg:order-first" : "lg:col-span-1";
 
   return (
     <aside
@@ -155,14 +121,14 @@ const PageSidebar = ({
     >
       {children}
     </aside>
-  )
-}
+  );
+};
 
 /**
  * PageContent - Main content wrapper (used with PageLayout + PageSidebar)
  * Automatically spans remaining columns
  */
-const PageContent = ({ children, className = '' }: PageSectionProps) => {
+const PageContent = ({ children, className = "" }: PageSectionProps) => {
   return (
     <div
       className={`
@@ -173,26 +139,26 @@ const PageContent = ({ children, className = '' }: PageSectionProps) => {
     >
       {children}
     </div>
-  )
-}
+  );
+};
 
 /**
  * PageGrid - Grid layout for cards, items, or other repeating content
  * Responsive columns based on breakpoints
  */
 interface PageGridProps {
-  children: ReactNode
-  columns?: 1 | 2 | 3 | 4
-  className?: string
+  children: ReactNode;
+  columns?: 1 | 2 | 3 | 4;
+  className?: string;
 }
 
-const PageGrid = ({ children, columns = 3, className = '' }: PageGridProps) => {
+const PageGrid = ({ children, columns = 3, className = "" }: PageGridProps) => {
   const columnMap = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-1 sm:grid-cols-2',
-    3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
-  }
+    1: "grid-cols-1",
+    2: "grid-cols-1 sm:grid-cols-2",
+    3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+    4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+  };
 
   return (
     <div
@@ -205,8 +171,8 @@ const PageGrid = ({ children, columns = 3, className = '' }: PageGridProps) => {
     >
       {children}
     </div>
-  )
-}
+  );
+};
 
 export {
   PageLayout,
@@ -215,5 +181,4 @@ export {
   PageSidebar,
   PageContent,
   PageGrid,
-}
-export type { PageLayoutProps, PageSectionProps, PageHeaderProps, PageSidebarProps, PageGridProps }
+};

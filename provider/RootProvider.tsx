@@ -1,18 +1,19 @@
-import React from 'react'
-import { ThemeProvider } from './theme-provider'
+import React from "react";
+import { ClerkProvider } from "@clerk/nextjs";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface RootProviderProps {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 const RootProvider = ({ children }: RootProviderProps) => {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <main className="w-full min-h-dvh bg-background text-foreground flex flex-col items-center">
+    <ClerkProvider>
+      <TooltipProvider>
         {children}
-      </main>
-    </ThemeProvider>
-  )
-}
+      </TooltipProvider>
+    </ClerkProvider>
+  );
+};
 
-export default RootProvider
+export default RootProvider;

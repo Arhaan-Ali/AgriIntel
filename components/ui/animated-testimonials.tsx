@@ -5,12 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 import { useEffect, useState } from "react";
 
-type Testimonial = {
-  quote: string;
-  name: string;
-  designation: string;
-  src: string;
-};
+import type { Testimonial } from "@/types/animated-testimonials.interface";
 export const AnimatedTestimonials = ({
   testimonials,
   autoplay = false,
