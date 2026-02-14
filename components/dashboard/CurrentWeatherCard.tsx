@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import {
   Card,
@@ -9,7 +7,9 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
-import type { OpenWeatherCurrentResponse } from "@/types/weather/openweather-current.interface";
+import { getWeatherData } from "./getWeatherData.server";
+import { Button } from "../ui/button";
+import { RefreshCcw } from "lucide-react";
 
 interface CurrentWeatherCardProps {
   lat: string;
@@ -17,63 +17,55 @@ interface CurrentWeatherCardProps {
   units?: "metric" | "imperial" | "standard";
 }
 
-export default function CurrentWeatherCard({
+// ...existing code...
+
+function WeatherCardContent({
   lat,
   lon,
   units = "metric",
 }: CurrentWeatherCardProps) {
-  const [weather, setWeather] = useState<OpenWeatherCurrentResponse | null>(
-    null,
-  );
-  useEffect(() => {
-    fetchWeather();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lat, lon, units]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [weather, setWeather] = React.useState<
+    | import("@/types/weather/openweather-current.interface").OpenWeatherCurrentResponse
+    | null
+  >(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
-  const fetchWeather = async () => {
+  React.useEffect(() => {
+    let cancelled = false;
     setLoading(true);
     setError(null);
-    try {
-      const res = await fetch(
-        `/api/weather/current?lat=${lat}&lon=${lon}&units=${units}`,
-      );
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.error);
-      setWeather(json.data);
-    } catch (err: unknown) {
-      if (typeof err === "object" && err && "message" in err) {
-        setError(
-          (err as { message?: string }).message || "Failed to fetch weather",
-        );
-      } else {
-        setError("Failed to fetch weather");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchWeather();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setWeather(null);
+    getWeatherData(lat, lon, units)
+      .then(({ weather, error }) => {
+        if (!cancelled) {
+          setWeather(weather);
+          setError(error);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError("Failed to fetch weather data.");
+          setLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [lat, lon, units]);
 
   return (
-    <Card
-      className={
-        loading
-          ? "opacity-60 animate-pulse w-full max-w-md mx-auto transition-colors duration-300"
-          : "w-full max-w-md mx-auto transition-colors duration-300"
-      }
-    >
-      <CardHeader>
+    <Card className="w-full max-w-md mx-auto transition-colors duration-300">
+      <CardHeader className="flex items-center justify-between">
         <CardTitle>Current Weather</CardTitle>
+        <Button variant="ghost" onClick={() => window.location.reload()}>
+          <RefreshCcw className="mr-2 h-4 w-4" />
+        </Button>
         {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
-        {!weather && !error && <CardDescription>Loading...</CardDescription>}
+        {loading && !error && <CardDescription>Loading...</CardDescription>}
       </CardHeader>
-      {weather && (
+      {weather && !loading && (
         <CardContent className="flex flex-col gap-4 items-center">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
             <Image
@@ -136,3 +128,9 @@ export default function CurrentWeatherCard({
     </Card>
   );
 }
+
+const CurrentWeatherCard = (props: CurrentWeatherCardProps) => (
+  <WeatherCardContent {...props} />
+);
+
+export default CurrentWeatherCard;
