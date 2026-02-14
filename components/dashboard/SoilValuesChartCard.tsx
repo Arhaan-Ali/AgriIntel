@@ -36,7 +36,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const SoilValuesChartCad = (): React.ReactElement => {
+const SoilValuesChartCard = (): React.ReactElement => {
   return (
     <div className="col-span-1 flex flex-col h-full w-full">
       <Card>
@@ -101,4 +101,4 @@ const SoilValuesChartCad = (): React.ReactElement => {
   );
 };
 
-export default SoilValuesChartCad;
+export default SoilValuesChartCard;

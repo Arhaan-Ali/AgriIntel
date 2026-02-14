@@ -1,9 +1,10 @@
-import PieChartCard from "@/components/dashboard/PieChartCard";
-import SoilValuesChartCad from "@/components/dashboard/SoilValuesChartCad";
-import ValueInputCard from "@/components/dashboard/ValueInputCard";
+import DashboardWeatherCardWrapper from "@/components/dashboard/DashboardWeatherCardWrapper";
 import WeatherHistoryChartCard from "@/components/dashboard/WeatherHistoryChartCard";
+import ValueInputCard from "@/components/dashboard/ValueInputCard";
+import PieChartCard from "@/components/dashboard/PieChartCard";
+import SoilValuesChartCard from "@/components/dashboard/SoilValuesChartCard";
 
-const DashboardPage = () => {
+export const DashboardPage = () => {
   return (
     <main className="w-full space-y-6">
       <header className="space-y-2">
@@ -15,26 +16,13 @@ const DashboardPage = () => {
         </p>
       </header>
 
-      <section
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full"
-      >
- 
-          <SoilValuesChartCad />
-          <WeatherHistoryChartCard />
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
+        <SoilValuesChartCard />
+        <WeatherHistoryChartCard />
+        <DashboardWeatherCardWrapper />
       </section>
 
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {/* <div className="  ">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-foreground">
-              Weekly performance
-            </h2>
-            <span className="text-xs text-muted-foreground">Last 7 days</span>
-          </div>
-          <div className="mt-6 grid h-40 place-items-center rounded-xl border border-dashed border-border/70 text-sm text-muted-foreground">
-            Chart placeholder
-          </div>
-        </div> */}
         <ValueInputCard />
         <PieChartCard />
       </section>
@@ -67,5 +55,3 @@ const DashboardPage = () => {
     </main>
   );
 };
-
-export default DashboardPage;

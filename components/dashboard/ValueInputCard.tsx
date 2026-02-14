@@ -117,8 +117,6 @@ const ValueInputCard: React.FC<ValueInputCardProps> = ({
         >
           Submit
         </button>
-
-        {/* Optionally add a submit button */}
       </form>
     </div>
   );

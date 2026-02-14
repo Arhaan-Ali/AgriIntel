@@ -55,7 +55,7 @@ const PieChartCard: React.FC<PieChartCardProps> = ({
               paddingAngle={2}
               dataKey="value"
               label={showLabels ? ({ name }) => name : undefined}
-              isAnimationActive={false}
+
             >
               {data.map((entry, idx) => (
                 <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />

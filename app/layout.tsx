@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import RootProvider from "@/provider/RootProvider";
-
+import { ThemeProvider } from "@/provider/theme-provider";
 
 export const metadata: Metadata = {
   title: "App",
@@ -15,11 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body className="antialiased w-full min-h-dvh bg-background text-neutral-900">
-          <RootProvider>
-            {children}
-          </RootProvider>
-        </body>
-      </html>
+      <body className="antialiased w-full min-h-dvh bg-background text-neutral-900">
+        <ThemeProvider>
+          <RootProvider>{children}</RootProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
