@@ -1,0 +1,1 @@
+Class_name = ["Alluvial Soil", "Black Soil", "Clay Soil", "Red Soil"]

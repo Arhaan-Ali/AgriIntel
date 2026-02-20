@@ -50,18 +50,32 @@ SoilSense is a beautiful, responsive web experience built with Next.js and Tailw
 pnpm install
 ```
 
-### 2) Configure environment variables
+### 2) (Optional) Configure environment variables
 
 Create a local env file at `.env.local`:
 
 ```
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_FASTAPI_URL=http://127.0.0.1:8000
 ```
 
 > Get your keys from the Clerk Dashboard: https://dashboard.clerk.com
 
-### 3) Run the development server
+### 3) Start the FastAPI backend (soil + crop + weather/rainfall)
+
+From the repo root:
+
+```bash
+python -m pip install -r backend/requirements.txt
+python -m uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Health check:
+
+- `http://127.0.0.1:8000/health`
+
+### 4) Run the Next.js development server
 
 ```bash
 pnpm dev
