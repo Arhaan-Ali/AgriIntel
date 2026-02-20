@@ -58,9 +58,12 @@ Create a local env file at `.env.local`:
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 NEXT_PUBLIC_FASTAPI_URL=http://127.0.0.1:8000
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-> Get your keys from the Clerk Dashboard: https://dashboard.clerk.com
+> Get your keys from:
+> - Clerk Dashboard: https://dashboard.clerk.com
+> - Google Gemini API: https://makersuite.google.com/app/apikey (free tier available)
 
 ### 3) Start the FastAPI backend (soil + crop + weather/rainfall)
 

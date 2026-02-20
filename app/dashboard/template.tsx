@@ -19,13 +19,25 @@ import {
   SidebarLink,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Leaf, LayoutDashboard, History, Settings, Menu } from "lucide-react";
+import {
+  Leaf,
+  LayoutDashboard,
+  History,
+  Settings,
+  Menu,
+  MessageCircle,
+} from "lucide-react";
 
 const sidebarLinks = [
   {
     label: "Dashboard",
     href: "/dashboard",
     icon: <LayoutDashboard className="h-4 w-4 text-primary" />,
+  },
+  {
+    label: "Chatbot",
+    href: "/dashboard/chatbot",
+    icon: <MessageCircle className="h-4 w-4 text-muted-foreground" />,
   },
   {
     label: "History",
@@ -41,6 +53,7 @@ const sidebarLinks = [
 
 const breadcrumbLabels: Record<string, string> = {
   "/dashboard": "Dashboard",
+  "/dashboard/chatbot": "Chatbot",
   "/dashboard/history": "History",
   "/dashboard/settings": "Settings",
 };

@@ -7,6 +7,24 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    # Load from project root or backend directory
+    env_path = Path(__file__).resolve().parents[2] / ".env"  # Project root
+    if not env_path.exists():
+        env_path = Path(__file__).resolve().parents[1] / ".env"  # Backend directory
+    if env_path.exists():
+        load_dotenv(env_path)
+    else:
+        # Try .env.local as well
+        env_local = Path(__file__).resolve().parents[2] / ".env.local"
+        if env_local.exists():
+            load_dotenv(env_local)
+except ImportError:
+    # dotenv not installed, skip
+    pass
+
 # Force reload numpy to avoid cached version issues
 import sys
 if 'numpy' in sys.modules:
@@ -17,7 +35,8 @@ import httpx
 import joblib
 import pickle
 import pandas as pd
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile, Body
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 
@@ -520,5 +539,169 @@ async def predict(
             "yield_predictions": yield_predictions,
         },
     }
+
+
+class ChatRequest(BaseModel):
+    message: str
+    conversation_history: list = []
+
+@app.post("/chat")
+async def chat_with_gemini(request: ChatRequest):
+    """
+    Proxy endpoint for Gemini chat API to avoid CORS issues.
+    Uses google-generativeai SDK for reliable communication.
+    """
+    try:
+        import google.generativeai as genai
+        
+        # Get API key from environment
+        gemini_api_key = os.getenv("GEMINI_API_KEY") or os.getenv("NEXT_PUBLIC_GEMINI_API_KEY")
+        if not gemini_api_key:
+            raise HTTPException(
+                status_code=500,
+                detail="Gemini API key not configured. Please set GEMINI_API_KEY or NEXT_PUBLIC_GEMINI_API_KEY environment variable."
+            )
+        
+        # Configure the API
+        genai.configure(api_key=gemini_api_key)
+        
+        # Get message and history from request
+        message = request.message
+        history = request.conversation_history if request.conversation_history else []
+        
+        # Models to try in order - prioritize free tier models first
+        # Free tier typically has: gemini-pro, gemini-1.5-flash, gemini-1.5-pro
+        models_to_try = [
+            "gemini-1.5-flash",      # Free tier, fast and reliable
+            "gemini-pro",             # Free tier, basic model (always available)
+            "gemini-1.5-pro",        # Free tier, more capable (may have rate limits)
+            "gemini-2.5-flash",      # Newer model (if available)
+            "gemini-2.0-flash",      # Alternative
+            "gemini-flash-latest",   # Latest alias
+        ]
+        
+        last_error = None
+        
+        for model_name in models_to_try:
+            try:
+                # Get the model
+                model = genai.GenerativeModel(model_name)
+                
+                # Prepare conversation history for the SDK
+                # Convert our format to SDK format
+                chat_history = []
+                for msg in history:
+                    if msg.get("role") == "user":
+                        chat_history.append({"role": "user", "parts": [msg["parts"][0]["text"]]})
+                    elif msg.get("role") == "model":
+                        chat_history.append({"role": "model", "parts": [msg["parts"][0]["text"]]})
+                
+                # System instruction for farming expertise
+                system_instruction = (
+                    "You are an expert agricultural assistant specialized in helping farmers. "
+                    "Your expertise includes: crop selection, soil management (NPK, pH), "
+                    "pest/disease identification, irrigation, fertilizer recommendations, "
+                    "yield optimization, seasonal practices, organic farming, and market information. "
+                    "\n\nCRITICAL: Always format responses as bullet points. Keep answers under 150 words. "
+                    "Use simple language. Be practical and actionable."
+                )
+                
+                # Generation config for shorter, concise responses
+                # Note: max_output_tokens may not be supported by all free tier models
+                # So we rely on system instruction to keep responses short
+                generation_config = {
+                    "temperature": 0.7,
+                    "top_p": 0.95,
+                    "top_k": 40,
+                    # Don't use max_output_tokens - it may cause errors with free tier
+                    # System instruction already requests short responses
+                }
+                
+                # Handle conversation with fallback for free tier models
+                try:
+                    if chat_history:
+                        # Continue existing conversation
+                        chat = model.start_chat(
+                            history=chat_history,
+                            generation_config=generation_config
+                        )
+                        response = chat.send_message(message)
+                    else:
+                        # First message - try with system_instruction (may not work on all free tier models)
+                        try:
+                            model_with_instruction = genai.GenerativeModel(
+                                model_name=model_name,
+                                system_instruction=system_instruction,
+                                generation_config=generation_config
+                            )
+                            response = model_with_instruction.generate_content(message)
+                        except Exception as sys_err:
+                            # Fallback: include system instruction in the message itself
+                            # This works with all free tier models including older ones
+                            full_message = f"{system_instruction}\n\nUser question: {message}"
+                            response = model.generate_content(
+                                full_message,
+                                generation_config=generation_config
+                            )
+                except Exception as gen_err:
+                    # If generation_config fails, try without it
+                    print(f"Generation config error, retrying without config: {str(gen_err)}")
+                    if chat_history:
+                        chat = model.start_chat(history=chat_history)
+                        response = chat.send_message(message)
+                    else:
+                        full_message = f"{system_instruction}\n\nUser question: {message}"
+                        response = model.generate_content(full_message)
+                
+                # Extract response text
+                assistant_message = response.text
+                
+                return {
+                    "ok": True,
+                    "message": assistant_message,
+                }
+                
+            except Exception as e:
+                error_msg = str(e)
+                last_error = error_msg
+                import traceback
+                print(f"Error with model {model_name}: {error_msg}")
+                print(f"Full traceback: {traceback.format_exc()}")
+                # If model not found, try next one
+                if "not found" in error_msg.lower() or "not available" in error_msg.lower():
+                    continue
+                # If it's a generation config error, try without it
+                if "generation_config" in error_msg.lower() or "generationConfig" in error_msg.lower() or "max_output_tokens" in error_msg.lower():
+                    try:
+                        # Retry without generation_config
+                        if chat_history:
+                            chat = model.start_chat(history=chat_history)
+                            response = chat.send_message(message)
+                        else:
+                            full_message = f"{system_instruction}\n\nUser question: {message}"
+                            response = model.generate_content(full_message)
+                        assistant_message = response.text
+                        return {
+                            "ok": True,
+                            "message": assistant_message,
+                        }
+                    except:
+                        continue
+                # For other errors, try next model
+                continue
+        
+        # If all models failed
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get response from Gemini API. Last error: {last_error or 'All models failed.'}"
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error communicating with Gemini API: {str(e)}"
+        )
 
 
