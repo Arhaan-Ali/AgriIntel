@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Send, Mic, MicOff, Loader2 } from "lucide-react";
+import { Send, Mic, MicOff, Loader2, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* -------------------- Types -------------------- */
@@ -31,9 +31,77 @@ const FarmerChatbot: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [speakingMessageIndex, setSpeakingMessageIndex] = useState<number | null>(null);
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const finalizedTextRef = useRef<string>(""); // Track all finalized text
+  const synthesisRef = useRef<SpeechSynthesis | null>(null);
+
+  /* -------------------- Text-to-Speech -------------------- */
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      synthesisRef.current = window.speechSynthesis;
+    }
+  }, []);
+
+  const speakMessage = (text: string, messageIndex: number) => {
+    if (!synthesisRef.current) {
+      return;
+    }
+
+    // Stop any currently speaking message
+    if (speakingMessageIndex !== null) {
+      synthesisRef.current.cancel();
+    }
+
+    // Clean text - remove markdown-like formatting for better speech
+    const cleanText = text
+      .replace(/[•\-\*]/g, "") // Remove bullet points
+      .replace(/\d+[\.\)]\s/g, "") // Remove numbered list markers
+      .replace(/\n+/g, ". ") // Replace newlines with periods
+      .trim();
+
+    if (!cleanText) {
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 0.9; // Slightly slower for clarity
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    utterance.lang = "en-US";
+
+    utterance.onstart = () => {
+      setSpeakingMessageIndex(messageIndex);
+    };
+
+    utterance.onend = () => {
+      setSpeakingMessageIndex(null);
+    };
+
+    utterance.onerror = () => {
+      setSpeakingMessageIndex(null);
+    };
+
+    synthesisRef.current.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    if (synthesisRef.current) {
+      synthesisRef.current.cancel();
+      setSpeakingMessageIndex(null);
+    }
+  };
+
+  // Stop speaking when component unmounts
+  useEffect(() => {
+    return () => {
+      if (synthesisRef.current) {
+        synthesisRef.current.cancel();
+      }
+    };
+  }, []);
 
   /* -------------------- Speech Recognition -------------------- */
 
@@ -288,19 +356,51 @@ const FarmerChatbot: React.FC = () => {
               <div
                 key={i}
                 className={cn(
-                  "flex",
+                  "flex items-start gap-2",
                   msg.role === "user" ? "justify-end" : "justify-start"
                 )}
               >
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-lg px-4 py-2 text-sm",
+                    "max-w-[80%] rounded-lg px-4 py-2 text-sm relative group",
                     msg.role === "user"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted"
                   )}
                 >
-                  <div className="whitespace-pre-wrap space-y-1.5">
+                  {/* Speaker button */}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "absolute -top-1 -right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity",
+                      msg.role === "user"
+                        ? "text-primary-foreground hover:bg-primary-foreground/20"
+                        : "text-muted-foreground hover:bg-muted-foreground/20",
+                      speakingMessageIndex === i && "opacity-100 animate-pulse"
+                    )}
+                    onClick={() => {
+                      if (speakingMessageIndex === i) {
+                        stopSpeaking();
+                      } else {
+                        speakMessage(msg.content, i);
+                      }
+                    }}
+                    title={
+                      speakingMessageIndex === i
+                        ? "Stop speaking"
+                        : "Read aloud"
+                    }
+                  >
+                    {speakingMessageIndex === i ? (
+                      <VolumeX className="h-3 w-3" />
+                    ) : (
+                      <Volume2 className="h-3 w-3" />
+                    )}
+                  </Button>
+
+                  <div className="whitespace-pre-wrap space-y-1.5 pr-6">
                     {msg.content.split('\n').map((line, idx) => {
                       const trimmedLine = line.trim();
                       // Format bullet points
