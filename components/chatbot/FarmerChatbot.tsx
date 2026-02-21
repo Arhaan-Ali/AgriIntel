@@ -30,8 +30,10 @@ const FarmerChatbot: React.FC = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const finalizedTextRef = useRef<string>(""); // Track all finalized text
 
   /* -------------------- Speech Recognition -------------------- */
 
@@ -42,25 +44,83 @@ const FarmerChatbot: React.FC = () => {
       (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition;
 
-    if (!SpeechRecognition) return;
+    if (!SpeechRecognition) {
+      console.warn("Speech Recognition not supported in this browser");
+      setSpeechSupported(false);
+      return;
+    }
 
+    setSpeechSupported(true);
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.interimResults = true; // Show interim results for better UX
     recognition.lang = "en-US";
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
 
     recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setInput(transcript);
-      setIsListening(false);
+      let interimTranscript = "";
+      let finalTranscript = "";
+
+      // Process all results from the current index
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      // Update finalized text if we have final results
+      if (finalTranscript.trim()) {
+        finalizedTextRef.current += (finalizedTextRef.current ? " " : "") + finalTranscript.trim();
+      }
+
+      // Update input field: show finalized text + current interim text
+      setInput(() => {
+        if (interimTranscript) {
+          return finalizedTextRef.current + (finalizedTextRef.current ? " " : "") + interimTranscript;
+        } else {
+          return finalizedTextRef.current;
+        }
+      });
     };
 
     recognition.onerror = (event: any) => {
-      console.error("Speech error:", event.error);
+      console.error("Speech recognition error:", event.error);
       setIsListening(false);
+      
+      // Show user-friendly error messages
+      if (event.error === "no-speech") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "No speech detected. Please try again.",
+            timestamp: new Date(),
+          },
+        ]);
+      } else if (event.error === "not-allowed") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "Microphone permission denied. Please enable microphone access in your browser settings.",
+            timestamp: new Date(),
+          },
+        ]);
+      }
     };
 
-    recognition.onend = () => setIsListening(false);
+    recognition.onend = () => {
+      setIsListening(false);
+      // Ensure input shows finalized text when recognition ends
+      setInput(finalizedTextRef.current);
+    };
 
     recognitionRef.current = recognition;
   }, []);
@@ -162,15 +222,53 @@ const FarmerChatbot: React.FC = () => {
 
   const toggleListening = () => {
     const recognition = recognitionRef.current;
-    if (!recognition) return;
-
-    if (isListening) {
-      recognition.stop();
-    } else {
-      recognition.start();
+    
+    if (!speechSupported) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.",
+          timestamp: new Date(),
+        },
+      ]);
+      return;
     }
 
-    setIsListening(!isListening);
+    if (!recognition) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Speech recognition is not available. Please refresh the page.",
+          timestamp: new Date(),
+        },
+      ]);
+      return;
+    }
+
+    try {
+      if (isListening) {
+        recognition.stop();
+        setIsListening(false);
+      } else {
+        // Clear input and finalized text when starting new recording
+        finalizedTextRef.current = "";
+        setInput("");
+        recognition.start();
+      }
+    } catch (error: any) {
+      console.error("Error toggling speech recognition:", error);
+      setIsListening(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `Error starting voice input: ${error.message || "Unknown error"}`,
+          timestamp: new Date(),
+        },
+      ]);
+    }
   };
 
   /* -------------------- UI -------------------- */
@@ -258,19 +356,25 @@ const FarmerChatbot: React.FC = () => {
                 disabled={isLoading}
               />
 
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1/2 -translate-y-1/2"
-                onClick={toggleListening}
-              >
-                {isListening ? (
-                  <MicOff className="h-4 w-4" />
-                ) : (
-                  <Mic className="h-4 w-4" />
-                )}
-              </Button>
+              {speechSupported && (
+                <Button
+                  type="button"
+                  variant={isListening ? "destructive" : "ghost"}
+                  size="icon"
+                  className={cn(
+                    "absolute right-1 top-1/2 -translate-y-1/2",
+                    isListening && "animate-pulse"
+                  )}
+                  onClick={toggleListening}
+                  title={isListening ? "Stop listening" : "Start voice input"}
+                >
+                  {isListening ? (
+                    <MicOff className="h-4 w-4" />
+                  ) : (
+                    <Mic className="h-4 w-4" />
+                  )}
+                </Button>
+              )}
             </div>
 
             <Button
