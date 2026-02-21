@@ -602,59 +602,41 @@ async def chat_with_gemini(request: ChatRequest):
                     "Your expertise includes: crop selection, soil management (NPK, pH), "
                     "pest/disease identification, irrigation, fertilizer recommendations, "
                     "yield optimization, seasonal practices, organic farming, and market information. "
-                    "\n\nCRITICAL: Always format responses as bullet points. Keep answers under 150 words. "
-                    "Use simple language. Be practical and actionable."
+                    "Always provide practical, actionable advice. Be friendly, clear, and concise. "
+                    "Use simple language that farmers can easily understand."
                 )
                 
-                # Generation config for shorter, concise responses
-                # Note: max_output_tokens may not be supported by all free tier models
-                # So we rely on system instruction to keep responses short
-                generation_config = {
-                    "temperature": 0.7,
-                    "top_p": 0.95,
-                    "top_k": 40,
-                    # Don't use max_output_tokens - it may cause errors with free tier
-                    # System instruction already requests short responses
-                }
-                
                 # Handle conversation with fallback for free tier models
-                try:
-                    if chat_history:
-                        # Continue existing conversation
-                        chat = model.start_chat(
-                            history=chat_history,
-                            generation_config=generation_config
+                if chat_history:
+                    # Continue existing conversation
+                    chat = model.start_chat(history=chat_history)
+                    response = chat.send_message(message)
+                else:
+                    # First message - try with system_instruction (may not work on all free tier models)
+                    try:
+                        model_with_instruction = genai.GenerativeModel(
+                            model_name=model_name,
+                            system_instruction=system_instruction
                         )
-                        response = chat.send_message(message)
-                    else:
-                        # First message - try with system_instruction (may not work on all free tier models)
-                        try:
-                            model_with_instruction = genai.GenerativeModel(
-                                model_name=model_name,
-                                system_instruction=system_instruction,
-                                generation_config=generation_config
-                            )
-                            response = model_with_instruction.generate_content(message)
-                        except Exception as sys_err:
-                            # Fallback: include system instruction in the message itself
-                            # This works with all free tier models including older ones
-                            full_message = f"{system_instruction}\n\nUser question: {message}"
-                            response = model.generate_content(
-                                full_message,
-                                generation_config=generation_config
-                            )
-                except Exception as gen_err:
-                    # If generation_config fails, try without it
-                    print(f"Generation config error, retrying without config: {str(gen_err)}")
-                    if chat_history:
-                        chat = model.start_chat(history=chat_history)
-                        response = chat.send_message(message)
-                    else:
+                        response = model_with_instruction.generate_content(message)
+                    except Exception as sys_err:
+                        # Fallback: include system instruction in the message itself
+                        # This works with all free tier models including older ones
                         full_message = f"{system_instruction}\n\nUser question: {message}"
                         response = model.generate_content(full_message)
                 
                 # Extract response text
-                assistant_message = response.text
+                try:
+                    assistant_message = response.text
+                except AttributeError:
+                    # Handle different response formats
+                    if hasattr(response, 'candidates') and response.candidates:
+                        assistant_message = response.candidates[0].content.parts[0].text
+                    else:
+                        raise ValueError(f"Unexpected response format: {type(response)}")
+                
+                if not assistant_message:
+                    raise ValueError("Empty response from model")
                 
                 return {
                     "ok": True,
@@ -664,29 +646,10 @@ async def chat_with_gemini(request: ChatRequest):
             except Exception as e:
                 error_msg = str(e)
                 last_error = error_msg
-                import traceback
                 print(f"Error with model {model_name}: {error_msg}")
-                print(f"Full traceback: {traceback.format_exc()}")
                 # If model not found, try next one
                 if "not found" in error_msg.lower() or "not available" in error_msg.lower():
                     continue
-                # If it's a generation config error, try without it
-                if "generation_config" in error_msg.lower() or "generationConfig" in error_msg.lower() or "max_output_tokens" in error_msg.lower():
-                    try:
-                        # Retry without generation_config
-                        if chat_history:
-                            chat = model.start_chat(history=chat_history)
-                            response = chat.send_message(message)
-                        else:
-                            full_message = f"{system_instruction}\n\nUser question: {message}"
-                            response = model.generate_content(full_message)
-                        assistant_message = response.text
-                        return {
-                            "ok": True,
-                            "message": assistant_message,
-                        }
-                    except:
-                        continue
                 # For other errors, try next model
                 continue
         
@@ -699,9 +662,13 @@ async def chat_with_gemini(request: ChatRequest):
     except HTTPException:
         raise
     except Exception as e:
+        import traceback
+        error_detail = str(e)
+        print(f"Chat endpoint error: {error_detail}")
+        print(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(
             status_code=500,
-            detail=f"Error communicating with Gemini API: {str(e)}"
+            detail=f"Error communicating with Gemini API: {error_detail}"
         )
 
 
