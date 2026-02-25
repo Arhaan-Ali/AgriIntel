@@ -1,6 +1,6 @@
 <div align="center">
 
-# SoilSense 🌱
+# AgriIntel 🌱
 
 Modern soil analytics and farm intelligence for healthier yields.
 
