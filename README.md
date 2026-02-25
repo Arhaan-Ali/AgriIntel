@@ -19,7 +19,7 @@ Modern soil analytics and farm intelligence for healthier yields.
 
 ## ✨ Overview
 
-SoilSense is a beautiful, responsive web experience built with Next.js and Tailwind CSS. It showcases product marketing pages and a custom Clerk Elements authentication flow with social providers (Apple, GitHub, Google) plus email/password sign-in.
+AgriIntel is a beautiful, responsive web experience built with Next.js and Tailwind CSS. It showcases product marketing pages and a custom Clerk Elements authentication flow with social providers (Apple, GitHub, Google) plus email/password sign-in.
 
 ---
 
